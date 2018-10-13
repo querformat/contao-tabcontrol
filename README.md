@@ -8,7 +8,7 @@ Mit dem Contao Modul "tabcontrol" wird das Erzeugen und Pflegen von responsiven,
 
 Dazu wird ein neuer Layoutbereich für die Artikel (Tab-Inhalt), sowie ein neues Inhaltselement (Tab-Menü) im Backend hinzugefügt.
 
-###Anleitung
+### Anleitung
 1. Erstellt zuerst euere einzelnen Tab-Inhalte indem Ihr beliebige Artikel, mit dem Layoutbereich "Tab-Inhalt", erstellt
 2. Geht nun in einen normalen Artikel und fügt dort das Inhaltselement "Tab-Menü" hinzu
 3. In diesem Tab-Menü können nun die Artikel als Inhalt ausgewählt werden die den Anzeigebereich "Tab-Inhalt" besitzen
