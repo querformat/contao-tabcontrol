@@ -1,0 +1,82 @@
+<style>
+    .tabcontent {
+        background: #fff;
+        padding: 15px 25px;
+        border: 1px solid #cecece;
+        border-top: none;
+        border-bottom: none;
+    }
+
+    .tabcontent strong {
+        color: #589b0e;
+    }
+
+    .tabmenue {
+        margin-top: 5px;
+        border-bottom: 1px solid #cecece;
+        display: flex;
+    }
+
+    .tab {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 11px;
+        line-height: 13px;
+        background: #ededed;
+        border: 1px solid #cecece;
+        border-bottom: none;
+        padding: 7px 25px 7px;
+        margin-right: 10px;
+        color: #484848;
+        margin-top: 1px;
+        position: relative;
+    }
+
+    a.tab:hover {
+        background-color: #fff;
+    }
+
+    .tab.active {
+        top: 1px;
+        margin-top: 0;
+        background: #fff;
+        color: #77ac45;
+        border-top-color: #77ac45;
+        border-bottom: 1px solid #fff;
+    }
+</style>
+<div class="tabmenue" id="tabcontrol<?= $this->id ?>">
+    <?php
+
+    foreach ($this->tabArticles as $index => $tab) {
+
+        $active = '';
+        if ($index == 0 && !$this->collapsed)
+            $active = 'active';
+
+        $subTitle = ($tab['subtitle'] ? '<sup>' . $tab['subtitle'] . '</sup>' : '');
+
+        // check for article
+        if (!empty($tab['articleID'])) {
+            // create edit popup link
+            $tabLink = 'href="contao/main.php?do=article&amp;table=tl_content&amp;id=' . $tab['articleID'] . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '"';
+            echo '<a class="tab ' . $active . '" ' . $tabLink . ' onclick="Backend.openModalIframe({\'width\':768,\'title\':\'' . specialchars(str_replace("'", "\\'", sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'][1], $tab['articleID']))) . '\',\'url\':this.href});return false">' . $tab['title'] . $subTitle . '</a>';
+
+        } else {
+            // tab has no content
+            // create unlinked tab
+            echo '<div class="tab ' . $active . '">' . $tab['title'] . $subTitle . '</div>';
+        }
+    }
+    ?>
+</div>
+<div class="tabcontent">
+    <strong>Wichtig! Damit das Element im Frontend funktioniert muss jQuery eingebunden sein.</strong><br><br>
+    Hinweis: Durch Klick auf die einzelnen Tabs (außer es ist ein Link) kann der verknüpfte Inhalt direkt bearbeitet
+    werden,
+</div>
+<script>
+    document.getElementById('tabcontrol<?= $this->id ?>').parentNode.className = '';
+</script>

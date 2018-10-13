@@ -1,0 +1,153 @@
+<?php $this->extend('block_unsearchable'); ?>
+
+<?php $this->block('content'); ?>
+
+    <style>
+        .ce_qf_tabcontrol h2.tab {
+            display: none
+        }
+
+        @media (max-width: 680px) {
+            .ce_qf_tabcontrol .tabs__menue {
+                display: none
+            }
+
+            .ce_qf_tabcontrol h2.tab {
+                display: block
+            }
+        }
+    </style>
+
+<?php
+echo '<div class="tabs" id="tab__' . $this->id . '">';
+
+if (is_array($this->tabArticles)) {
+
+    echo '<div class="tabs__content">';
+    foreach ($this->tabArticles as $key => $tab) {
+
+        $tabTitle = (!empty($tab['title']) ? $this->replaceInsertTags($tab['title']) : \ArticleModel::findById($tab['articleID'])->title);
+        $tabId = StringUtil::generateAlias($tabTitle) . '_' . $this->id;
+
+        echo '<h2 class="tab">';
+        // tab is a link
+        if (!empty($tab['link']))
+            echo '<a href="' . $tab['link'] . '" ' . (strpos($tab['link'], '::') ? '' : 'target="_blank" ') . 'class="tab__head">';
+        // tab has content
+        else
+            echo '<a data-hash="#' . $tabId . '" href="'.$_SERVER['REQUEST_URI'].'#' . $tabId . '" class="tab__head">';
+        echo '<span class="tab__headline">' . $tabTitle . '</span>';
+        echo($tab['subtitle'] != '' ? '<span class="tab__subheadline">' . $tab['subtitle'] . '</span>' : '');
+        echo '</a>';
+        echo '</h2>';
+
+        echo '<div class="tab__body" id="' . $tabId . '">{{insert_article::' . $tab['articleID'] . '}}</div>';
+
+    }
+    echo '</div>';
+
+}
+
+echo '</div>';
+?>
+
+    <script>
+
+        $(function () {
+
+            /**
+             * create menue via js
+             * prevents searchbots to index duplicate content
+             */
+            $('#tab__<?= $this->id ?>').prepend('<ul class="tabs__menue"></ul>');
+            $('#tab__<?= $this->id ?> h2.tab').each(function () {
+                $('#tab__<?= $this->id ?> .tabs__menue').append('<li class="tab">' + $(this).html() + '</li>');
+            });
+            <?php
+            /**
+             * make first tab visible by default
+             */
+            ?>
+            $('#tab__<?= $this->id ?> .tab__body').hide();
+            $('#tab__<?= $this->id ?> .tabs__content .tab__body').first().show();
+            <?php
+            /**
+             * collapsable
+             * hide content to get the animation on first click working correctly
+             */
+            if($this->collapsed == 1){
+            ?>
+            $('#tab__<?= $this->id ?> .tabs__content').hide();
+            <?php
+            }
+            ?>
+            $('#tab__<?= $this->id ?> .tab a[data-hash]').on('click', function () {
+                <?php
+                /**
+                 * collapsable
+                 * click again on a tab makes it collapse
+                 */
+                if($this->collapsed == 1){
+                ?>
+                if ($(this).parent().hasClass('active')) {
+                    $('#tab__<?= $this->id ?> .tab').removeClass('active');
+                    $('#tab__<?= $this->id ?> .tabs__content').slideUp();
+                }
+                <?php
+                }
+                ?>
+                $('#tab__<?= $this->id ?> .tab__body').hide();
+                $('#tab__<?= $this->id ?> .tab').removeClass('active');
+                $(this).parent().addClass('active');
+
+                $($(this).attr('data-hash')).fadeIn(400, function () {
+                    $('#tab__<?= $this->id ?> .tabs__content').slideDown();
+                });
+
+                return false;
+            });
+
+            <?php
+            if($this->collapsed != 1){
+            ?>
+
+            var currHash = location.hash || window.location.hash;
+            if (currHash.length > 0) {
+                // reset all first
+                $('#tab__<?= $this->id ?> .tab').removeClass('active');
+                $('#tab__<?= $this->id ?> .tab__body').hide();
+
+                // set hash from url to active
+                $('#tab__<?= $this->id ?> .tab a[data-hash="' + currHash + '"]').parent().addClass('active');
+                $(currHash).show();
+            } else {
+                $('#tab__<?= $this->id ?> .tab:first-child').addClass('active');
+                $('#qf_tabcontrol<?= $this->id ?>-0').show();
+            }
+            <?php
+            }
+            ?>
+            <?php
+            /**
+             * collapsable
+             * close all tabs when clicking outside the tabID
+             */
+            if($this->collapsed == 1){
+            ?>
+            $('#tab__<?= $this->id ?> .tab__body').hide();
+            $(document).on('click', function () {
+                $('#tab__<?= $this->id ?> .tab').removeClass('active');
+                $('#tab__<?= $this->id ?> .tabs__content').slideUp();
+            });
+
+            $('#tab__<?= $this->id ?>').on('click', function (event) {
+                event.stopPropagation();
+            });
+            <?php
+            }
+            ?>
+        });
+
+    </script>
+
+<?php $this->endblock(); ?>

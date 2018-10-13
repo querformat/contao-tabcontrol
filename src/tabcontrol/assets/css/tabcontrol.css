@@ -1,0 +1,10 @@
+.qfTabcontrol .wizard .tl_text{
+    width:75%;
+}
+.qfTabcontrol table{
+    max-width: none;
+    width:100%;
+}
+.qfTabcontrol table tr td:nth-child(3){
+    width:330px;
+}

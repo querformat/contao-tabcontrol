@@ -1,0 +1,32 @@
+{
+  "name": "querformat/tabcontrol",
+  "description": "SEO-optimierte Tabmenüs für Contao",
+  "keywords": ["article","modules","layout","content","contao"],
+  "type": "contao-module",
+  "license": "LGPL-3.0+",
+  "authors": [
+    {
+      "name": "Enrico Schiller",
+      "email": "schiller@querformat.info",
+      "homepage": "https://www.querformat.info",
+      "role": "Webdeveloper"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/querformat/contao-tabcontrol/issues",
+    "source": "https://github.com/querformat/contao-tabcontrol"
+  },
+  "require": {
+    "php": ">=5.3.4",
+    "contao/core-bundle": "^4.4",
+    "menatwork/contao-multicolumnwizard": "^3.3.16",
+    "querformat/layout-sections-extender": "^1.0.0"
+  },
+  "extra": {
+    "contao": {
+      "sources": {
+        "src/tabcontrol": "system/modules/tabcontrol"
+      }
+    }
+  }
+}
